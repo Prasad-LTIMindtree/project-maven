@@ -44,10 +44,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
-    - name: Azure CLI logout
-      run: |
-       echo "Logging out from Azure..."
-       az logout
+
 
       # Logs in with your Azure credentials
     - name: Azure login
