@@ -30,12 +30,12 @@ jobs:
         name: my-war-file
         path: /home/runner/work/project-maven/project-maven/webapp/target/*.war
 
-    - name: Log in to Azure Container Registry
-      uses: azure/docker-login@v1
+    - name: Azure login
+      uses: azure/login@v1.4.6
       with:
-        login-server: ${{ secrets.REGISTRY_NAME }}.azurecr.io
-        username: ${{ secrets.AZURE_CLIENT_ID }}
-        password: ${{ secrets.AZURE_CLIENT_SECRET }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:latest
