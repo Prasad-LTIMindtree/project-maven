@@ -1,46 +1,53 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+ 
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+ 
 name: Java CI with Maven
-
+ 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+ 
 jobs:
+ 
   build:
-
+ 
     runs-on: ubuntu-latest
-
+ 
     steps:
     - uses: actions/checkout@v4
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-
-    - name: Upload .war file
-      uses: actions/upload-artifact@v3
+    - name: Upload WAR file
+      uses: actions/upload-artifact@v4
       with:
-        name: my-war-file
+        name: war-file 
         path: /home/runner/work/project-maven/project-maven/webapp/target/*.war
-
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+ 
+    - uses: actions/checkout@v4
+ 
+      # Logs in with your Azure credentials
     - name: Azure login
       uses: azure/login@v1.4.6
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:latest
-
-    - name: Push the Docker image
-      run: docker push ${{ secrets.REGISTRY_NAME }}.azurecr.io/my-app:${{ github.sha }} 
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Build and push image to ACR
+      run: |
+          az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
