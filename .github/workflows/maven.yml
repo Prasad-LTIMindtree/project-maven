@@ -41,6 +41,6 @@ jobs:
       run: docker build . --file Dockerfile --tag my-image-name:latest
 
     - name: Push the Docker image
-      run: docker push ${{ secrets.REGISTRY_NAME }}.azurecr.io/my-app:${{ github.sha }}
+      run: docker push ${{ secrets.REGISTRY_NAME }}.azurecr.io/my-app:${{ github.sha }} 
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
