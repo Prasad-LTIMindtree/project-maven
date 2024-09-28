@@ -35,7 +35,9 @@ jobs:
       with:
         name: my-war-file
         path: /home/runner/work/project-maven/project-maven/webapp/target/*.war
- 
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
