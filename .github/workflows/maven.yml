@@ -1,21 +1,9 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
- 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
- 
 name: Java CI with Maven
-
-
-
 
 permissions:
   id-token: write
   contents: read
 
- 
 on:
   push:
     branches: [ "main" ]
@@ -23,19 +11,15 @@ on:
     branches: [ "main" ]
 
 env:
- AZURE_CONTAINER_REGISTRY: "java123456"
- CONTAINER_NAME: "project"
- RESOURCE_GROUP: "example1"
- AKS_CLUSTER_NAME: "new-cluster"
- 
-   
- 
+  AZURE_CONTAINER_REGISTRY: "java123456"
+  CONTAINER_NAME: "project"
+  RESOURCE_GROUP: "example1"
+  AKS_CLUSTER_NAME: "new-cluster"
+
 jobs:
- 
   build:
- 
     runs-on: ubuntu-latest
- 
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -51,19 +35,17 @@ jobs:
       with:
         name: war-file 
         path: /home/runner/work/project-maven/project-maven/webapp/target/*.war
-    
 
-
-
-      # Logs in with your Azure credentials
-  
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: Build and push image to ACR
-      run: |
-          az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.cloudlifeacr.azurecr.io/${{ env.CONTAINER_NAME }}:latest --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
+
+    - name: Build Docker image
+      run: docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:latest .
+
+    - name: Push Docker image to ACR
+      run: docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:latest
 
     - name: Set AKS context
       uses: azure/aks-set-context@v2
@@ -72,10 +54,7 @@ jobs:
         cluster-name: ${{ env.AKS_CLUSTER_NAME }}
         resource-group: ${{ env.RESOURCE_GROUP }}
 
-
-    
     - name: Deploy to AKS
       run: |
-          az acr login --name java123456
-          kubectl apply -f webapp/deployment.yml
-          kubectl apply -f webapp/service.yml
+        kubectl apply -f webapp/deployment.yml
+        kubectl apply -f webapp/service.yml
