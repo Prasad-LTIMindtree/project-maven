@@ -40,19 +40,21 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: ACR login
+      run: 
+          az acr login --name java123456
 
-    - name: Build Docker image
-      run: docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:latest .
-
-    - name: Push Docker image to ACR
-      run: docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:latest
-
-    - name: Set AKS context
-      uses: azure/aks-set-context@v2
+          
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        cluster-name: ${{ env.AKS_CLUSTER_NAME }}
-        resource-group: ${{ env.RESOURCE_GROUP }}
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: java12345.azurecr.io/project1:latest
+
+
+   
 
     - name: Deploy to AKS
       run: |
