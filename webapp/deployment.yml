@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: regapp
-        image: java123456.azurecr.io/project:latest
+        image: java123456.azurecr.io/java123456.cloudlifeacr.azurecr.io/project:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
