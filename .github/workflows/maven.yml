@@ -71,6 +71,10 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         cluster-name: ${{ env.AKS_CLUSTER_NAME }}
         resource-group: ${{ env.RESOURCE_GROUP }}
+
+    - name: ACR login
+      run:
+         az acr login --name java123456
     
     - name: Deploy to AKS
       run: |
