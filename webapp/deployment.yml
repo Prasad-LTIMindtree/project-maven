@@ -17,5 +17,3 @@ spec:
         image: java123456.azurecr.io/project:latest
         ports:
         - containerPort: 80
-      imagePullSecrets:
-      - name: acr-secret
