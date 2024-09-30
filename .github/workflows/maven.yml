@@ -50,9 +50,7 @@ jobs:
       with:
         name: war-file 
         path: /home/runner/work/project-maven/project-maven/webapp/target/*.war
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    
 
 
 
