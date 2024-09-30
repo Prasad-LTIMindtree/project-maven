@@ -72,11 +72,10 @@ jobs:
         cluster-name: ${{ env.AKS_CLUSTER_NAME }}
         resource-group: ${{ env.RESOURCE_GROUP }}
 
-    - name: ACR login
-      run:
-         az acr login --name java123456
+
     
     - name: Deploy to AKS
       run: |
+          az acr login --name java123456
           kubectl apply -f webapp/deployment.yml
           kubectl apply -f webapp/service.yml
