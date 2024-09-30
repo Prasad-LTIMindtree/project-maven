@@ -59,4 +59,4 @@ jobs:
         manifests: |
               webapp/deployment.yml          
         images: |
-              java12345.azurecr.io/project1:latest
+              java123456.azurecr.io/project1:latest
