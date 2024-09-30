@@ -8,6 +8,9 @@
  
 name: Java CI with Maven
 
+
+
+
 permissions:
   id-token: write
   contents: read
@@ -18,6 +21,13 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
+env:
+ AZURE_CONTAINER_REGISTRY: "java123456"
+ CONTAINER_NAME: "project"
+ RESOURCE_GROUP: "example1"
+ 
+   
  
 jobs:
  
