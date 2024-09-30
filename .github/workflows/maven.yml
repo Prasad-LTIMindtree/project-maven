@@ -44,7 +44,19 @@ jobs:
       run: 
           az acr login --name java123456
 
-          
+    - name: Set up kubelogin for non-interactive login
+      uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: 'v0.0.25'
+
+      # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
+    - name: Get K8s context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: ${{ env.RESOURCE_GROUP }}
+        cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+        admin: 'false'
+        use-kubelogin: 'true'
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
