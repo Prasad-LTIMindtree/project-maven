@@ -26,6 +26,7 @@ env:
  AZURE_CONTAINER_REGISTRY: "java123456"
  CONTAINER_NAME: "project"
  RESOURCE_GROUP: "example1"
+ AKS_CLUSTER_NAME: "new-cluster"
  
    
  
@@ -64,6 +65,13 @@ jobs:
       run: |
           az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
 
+    - name: Set AKS context
+      uses: azure/aks-set-context@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+        resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+    
     - name: Deploy to AKS
       run: |
-          kubectl apply -f web/deployment.yaml
+          kubectl apply -f webapp/deployment.yaml
