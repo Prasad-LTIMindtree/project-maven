@@ -75,4 +75,4 @@ jobs:
     - name: Deploy to AKS
       run: |
           kubectl apply -f webapp/deployment.yml
-          kubeuctl apply -f webapp/service.yml
+          kubectl apply -f webapp/service.yml
