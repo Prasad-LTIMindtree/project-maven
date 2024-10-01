@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: regapp
-        image: java123456.azurecr.io/project1:latest
+        image: 376129856863.dkr.ecr.ap-northeast-1.amazonaws.com/git-action:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
